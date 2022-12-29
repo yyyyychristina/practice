@@ -11,6 +11,8 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -22,7 +24,24 @@ public class Main extends Application {
 	    Pane pane = new Pane();
 		pane.setStyle(
 	    	      "-fx-border-color: green; -fx-background-color: lightblue;");
-		 
+		
+		//Create a rectangle to hold the fan body
+		Rectangle fanholder = new Rectangle();
+		fanholder.setX(450);
+		fanholder.setY(500);
+		
+		//bind fanholder's width and height with pane's width and height
+		/**fanholder's width is much smaller, so pane.widthProperty is smaller, divided by 10
+		 * fanholder's height is much larger(longer), so pane.heightProperty is larger */
+		fanholder.widthProperty().bind(pane.widthProperty().divide(10));
+		fanholder.heightProperty().bind(pane.heightProperty().divide(4));
+		fanholder.setStroke(Color.CHOCOLATE);
+		fanholder.setStrokeWidth(5);
+		fanholder.setFill(Color.CORAL);
+		pane.getChildren().add(fanholder);
+		
+		
+		
 		//Create a circle called fan body and set its properties
 		Circle fanbody = new Circle();
 		fanbody.centerXProperty().bind(pane.widthProperty().divide(2));
@@ -35,8 +54,7 @@ public class Main extends Application {
 		pane.getChildren().add(fanbody);
 		
 		
-		
-		//Create four polygons(having three sides) with random color(Fill) using for loop and rotate them
+		//Create eight polygons(having three sides) with random color(Fill) using for loop and rotate them
 		for (int i = 0; i < 8; i++) {
 			
 			/**first loop*/
@@ -63,6 +81,30 @@ public class Main extends Application {
 			/**first loop*/
 		}
 
+		// create sixteen fan grill with black color using for loop and rotate them
+		for (int i = 0; i < 16; i++) {
+        /**first loop*/
+		Line fangrill = new Line(330, 100, 470, 240);
+		
+		fangrill.setStroke(Color.BLACK);
+		fangrill.setStrokeWidth(5);
+		
+		//Using a Rotate class to set i.e(new Rotate(angle, pivotX, pivotY)
+		/**for 16 fangrill lines, the angle will be half of blade's rotation angle
+		 * the pivotX and pivotY are the same as blade's pivotX and pivotY*/
+		fangrill.getTransforms().add(new Rotate(i * 22.5, 500, 274));
+		
+		//Add line to the pane
+		pane.getChildren().add(fangrill);
+		
+		//add listener when fanbody's centerX and centerY change
+		/**centerX change -> fangrill's endX change regarding pane's width
+		 * centerY change - > fangrill's endY change regarding pane's height
+		 * pane's width and height similar to fanbody's*/
+		fanbody.centerXProperty().addListener(ov -> {fangrill.setEndX(pane.getWidth() / 2);});
+		fanbody.centerYProperty().addListener(ov -> {fangrill.setEndY(pane.getHeight() / 2.75);});
+		/**first loop*/
+		}
 		
 		//Create a circle called fancenter in the middle of the fan body and set its properties
 		Circle fancenter = new Circle();
@@ -75,8 +117,7 @@ public class Main extends Application {
 		fancenter.setFill(Color.NAVY);
 		pane.getChildren().add(fancenter);
 		
-		//Create a rectangle to hold the fan body
-		
+
 		//Create an arc for holding buttons
 		
 		//Three buttons in the arc
